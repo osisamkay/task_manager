@@ -1,15 +1,14 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from pydantic.networks import EmailStr
 
 
 class User(BaseModel):
-    email: str
     username: str
     password: str
-    role: str
 
 
 class CreateUser(User):
-    pass
+    email: str
 
 
 class UpdateUser(User):
@@ -18,6 +17,3 @@ class UpdateUser(User):
 
 class DeleteUser(BaseModel):
     id: int
-
-
-
