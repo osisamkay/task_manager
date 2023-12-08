@@ -1,16 +1,16 @@
 from fastapi import APIRouter, status, HTTPException, Depends
 from typing import List, Optional
 from fastapi.responses import JSONResponse
-from models.task import TaskBase, TaskCreate, Task
-from database.database_session import SessionLocal
+from models.task import TaskBase, TaskCreate
+from database.database_session import TaskSessionLocal
 from sqlalchemy.orm import Session
-from database.models.task_table_model import TaskTableModel
+from database.models.task_table_model import Task
 
 router = APIRouter()
 
 
 def get_db():
-    db = SessionLocal()
+    db = TaskSessionLocal()
     try:
         yield db
     finally:
@@ -31,7 +31,7 @@ def read_tasks(db: Session = Depends(get_db)):
     :doc-author: Trelent
     """
     try:
-        tasks = db.query(TaskTableModel).all()
+        tasks = db.query(Task).all()
         return tasks
     except Exception as error:
         return JSONResponse(content={"detail": str(error)}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -47,7 +47,7 @@ def create_task(task: TaskBase, db: Session = db_dependency):
     :return: A tasktablemodel object
     """
     # try:
-    new_task = TaskTableModel(**task.__dict__)
+    new_task = Task(**task.__dict__)
     db.add(new_task)
     db.commit()
     db.refresh(new_task)
@@ -70,7 +70,7 @@ def get_task_id(id: int, db: Session = Depends(get_db)):
         :doc-author: Trelent
         """
 
-    retrieve_task = db.query(TaskTableModel).get(id)
+    retrieve_task = db.query(Task).get(id)
 
     if retrieve_task is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
@@ -97,7 +97,7 @@ def update_task(id: int, task: TaskBase, db: Session = Depends(get_db)):
         HTTPException: 500 Internal Server Error for unexpected errors during the update.
     """
     try:
-        existing_task = db.query(TaskTableModel).get(id)
+        existing_task = db.query(Task).get(id)
 
         if not existing_task:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
@@ -116,7 +116,7 @@ def update_task(id: int, task: TaskBase, db: Session = Depends(get_db)):
 
 @router.delete("/task/{id}", status_code=status.HTTP_200_OK)
 def delete_task(id, db: Session = Depends(get_db)):
-    get_task = db.query(TaskTableModel).get(id)
+    get_task = db.query(Task).get(id)
     db.delete(get_task)
     db.commit()
     db.refresh(get_task)

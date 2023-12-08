@@ -1,12 +1,16 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from database.models.task_table_model import Base
+from database.models.task_table_model import Base as TaskBase
+from database.models.user_table_model import Base as UserBase
 
 DATABASE_URL = "sqlite:///./database/task_manager.sqlite"
-engine = create_engine(DATABASE_URL)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Creating engines and sessions for Task and User tables
+task_engine = create_engine(DATABASE_URL)
+TaskBase.metadata.create_all(bind=task_engine)
+TaskSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=task_engine)
 
-# Create the database tables
-Base.metadata.create_all(bind=engine)
+user_engine = create_engine(DATABASE_URL)
+UserBase.metadata.create_all(bind=user_engine)
+UserSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=user_engine)
