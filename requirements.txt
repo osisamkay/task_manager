@@ -13,3 +13,4 @@ python-jose[cryptography]==3.3.0
 
 jose~=1.0.0
 starlette~=0.14.2
+fastapi_mail

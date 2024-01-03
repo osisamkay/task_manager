@@ -1,11 +1,12 @@
 # In user_routes.py
+from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from database.database_session import UserSessionLocal
-from models.user import User, CreateUser
+from models.user import Token, UserCreate, UserLogin, UserResetPassword, UserVerify
 from services.user_service import UserService
-from utils.auth import create_access_token, oauth2_scheme, get_current_user
+from utils.auth import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, oauth2_scheme
 
 router = APIRouter()
 
@@ -21,35 +22,21 @@ def get_db():
 db_dependency = Depends(get_db)
 
 
-@router.post("/register")
-def register_user(user: CreateUser, db: Session = Depends(get_db)):
+@router.post("/register", response_model=Token)
+def register(user: UserCreate, db: Session = Depends(get_db)):
     return UserService(db).create_user(user)
 
 
-@router.post("/login")
-async def login_for_access_token(
-        user: User,
-        db: Session = Depends(get_db),
-):
-    # Verify the username and password
-    user = UserService(db).authenticate_user(user)
-
-    if user:
-        # Create an access token
-        access_token = create_access_token({"sub": user.username})
-        return {"access_token": access_token, "token_type": "bearer"}
-
-    # If authentication fails, raise an HTTPException
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+@router.post("/login", response_model=Token)
+def login(user: UserLogin, db: Session = Depends(get_db)):
+    return UserService(db).login(user)
 
 
-@router.get("/users")
-def get_all_users(db: Session = Depends(get_db)):
-    users = UserService(db).get_all_users()
-    if not users:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
-    return users
+@router.post("/verify-email", response_model=Token)
+def verify_email(verification_data: UserVerify, db: Session = Depends(get_db)):
+    return UserService.verify_email(verification_data, db)
+
+
+@router.post("/reset-password", response_model=Token)
+def reset_password(reset_data: UserResetPassword, db: Session = Depends(get_db)):
+    return UserService.reset_password(reset_data, db)

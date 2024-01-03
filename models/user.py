@@ -2,18 +2,24 @@ from pydantic import BaseModel, Field
 from pydantic.networks import EmailStr
 
 
-class User(BaseModel):
-    username: str
+class UserCreate(BaseModel):
+    email: str
     password: str
 
 
-class CreateUser(User):
+class UserVerify(BaseModel):
+    verification_code: str
+
+
+class UserResetPassword(BaseModel):
     email: str
 
 
-class UpdateUser(User):
-    pass
+class UserLogin(BaseModel):
+    email: str
+    password: str
 
 
-class DeleteUser(BaseModel):
-    id: int
+class Token(BaseModel):
+    access_token: str
+    token_type: str
