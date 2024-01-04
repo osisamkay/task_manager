@@ -67,27 +67,6 @@ class UserService:
         )
         return JSONResponse(content={"access_token": access_token, "token_type": "bearer"})
 
-    # def login(self, user_login: UserLogin):
-    #     user_login_password = self.hash_password(user_login.password)
-
-    #     db_user = self.db.query(User).filter(
-    #         User.email == user_login.email).first()
-    #     print(user_login_password, db_user.hashed_password)
-
-    #     if not db_user or db_user.hashed_password != user_login_password:
-    #         raise HTTPException(
-    #             status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect email or password")
-
-    #     if not db_user.is_active:
-    #         raise HTTPException(
-    #             status_code=status.HTTP_400_BAD_REQUEST, detail="User not verified")
-
-    #     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    #     access_token = create_access_token(
-    #         data={"sub": user_login.email}, expires_delta=access_token_expires
-    #     )
-    #     return JSONResponse(content={"access_token": access_token, "token_type": "bearer"})
-
     def reset_password(self, reset_data: UserResetPassword):
         user = self.db.query(User).filter(
             User.email == reset_data.email).first()
@@ -159,9 +138,9 @@ class UserService:
         if not user and not self.verify_password(user_login.password, user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect email or password")
-        # if not user.is_active:
-        #     raise HTTPException(
-        #         status_code=status.HTTP_400_BAD_REQUEST, detail="User not verified")
+        if not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="User not verified")
 
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
