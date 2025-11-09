@@ -1,118 +1,132 @@
+# InvoiceCanada 🍁
 
+Professional Invoice Generator with Canadian Tax Support
 
-# Task Manager project
+## Overview
 
-This is a FastAPI project for managing tasks, started with Docker.
+InvoiceCanada is a micro-SaaS product designed specifically for Canadian contractors, freelancers, and small businesses to create professional invoices with accurate Canadian tax calculations (GST/PST/HST/QST).
 
-## Table of Contents
+## Key Features
 
-- [Description](#description)
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [API Documentation](#api-documentation)
-- [Docker](#docker)
-- [Contributing](#contributing)
-- [License](#license)
+- ✅ Automatic Canadian tax calculations (GST, PST, HST, QST)
+- ✅ Professional invoice templates
+- ✅ Client management
+- ✅ PDF generation
+- ✅ Payment tracking
+- ✅ Recurring invoices
+- ✅ Multi-user support
 
-## Description
+## Tech Stack
 
-This FastAPI project provides a RESTful API for managing tasks. It includes features such as task creation, retrieval, and more.
+### Frontend
+- React 18
+- TypeScript
+- Tailwind CSS
+- React-PDF
+- React Router
+- Axios
 
-## Features
+### Backend
+- Node.js
+- Express
+- TypeScript
+- Prisma ORM
+- PostgreSQL
+- JWT Authentication
 
-- Task creation
-- Task retrieval
-- ...
+### Infrastructure
+- Railway/Render
+- Cloudflare CDN
+- AWS S3
 
-## Requirements
+## Getting Started
 
-- Docker
-- Docker Compose
+### Prerequisites
 
-## Installation
+- Node.js 18+
+- PostgreSQL 14+
+- npm or yarn
 
-1. Clone the repository:
+### Installation
 
-   ```bash
-   git clone https://github.com/yourusername/my-fastapi-project.git
-   ```
+1. Clone the repository
+```bash
+git clone <repository-url>
+cd invoicecanada
+```
 
-2. Navigate to the project directory:
+2. Install dependencies
+```bash
+npm install
+```
 
-   ```bash
-   cd my-fastapi-project
-   ```
+3. Set up environment variables
 
-3. Build the Docker image:
+Create a `.env` file in the server directory:
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/invoicecanada"
+JWT_SECRET="your-secret-key"
+PORT=5000
+NODE_ENV=development
+```
 
-   ```bash
-   docker-compose build
-   ```
+4. Run database migrations
+```bash
+cd server
+npx prisma migrate dev
+```
 
-## Usage
+5. Start development servers
+```bash
+npm run dev
+```
 
-1. Start the Docker containers:
-
-   ```bash
-   docker-compose up
-   ```
-
-2. Open your browser and go to [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) for the Swagger documentation.
+The application will be available at:
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:5000
 
 ## Project Structure
 
 ```
-my_fastapi_project/
-├── app/
-│   ├── __init__.py
-│   ├── main.py  # FastAPI application initialization
-│   ├── routes/
-│   │   ├── __init__.py
-│   │   ├── task_routes.py
-│   │   ├── user_routes.py
-│   ├── models/
-│   │   ├── __init__.py
-│   │   ├── task.py
-│   │   ├── user.py
-│   ├── services/
-│   │   ├── __init__.py
-│   │   ├── user_service.py
-│   │   ├── task_service.py
-│   ├── utils/
-│   │   ├── __init__.py
-│   │   ├── auth.py
-│   │   ├── nlp.py
-│   │   ├── ai_prioritization.py
-│
-├── migrations/
-│
-├── tests/
-│   ├── __init__.py
-│   ├── test_task_routes.py
-│   ├── test_user_routes.py
-├── .env
-├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
+invoicecanada/
+├── client/              # React frontend
+│   ├── src/
+│   │   ├── components/  # Reusable components
+│   │   ├── pages/       # Page components
+│   │   ├── services/    # API services
+│   │   ├── hooks/       # Custom React hooks
+│   │   ├── utils/       # Utility functions
+│   │   └── types/       # TypeScript types
+│   └── public/          # Static assets
+├── server/              # Express backend
+│   ├── src/
+│   │   ├── controllers/ # Route controllers
+│   │   ├── routes/      # API routes
+│   │   ├── middleware/  # Express middleware
+│   │   ├── services/    # Business logic
+│   │   ├── utils/       # Utility functions
+│   │   └── types/       # TypeScript types
+│   └── prisma/          # Database schema
+└── docs/                # Documentation
+
 ```
 
 ## API Documentation
 
-API documentation is available using Swagger UI. Open [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) in your browser to explore the API.
-
-## Docker
-
-The project is Dockerized and can be run using Docker Compose. Ensure Docker and Docker Compose are installed on your machine.
+API documentation is available at `/api/docs` when running the development server.
 
 ## Contributing
 
-Feel free to contribute to this project by opening issues or submitting pull requests.
+Please read [CONTRIBUTING.md](docs/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
+## Support
+
+For support, email support@invoicecanada.com or create an issue in the GitHub repository.
+
+## Roadmap
+
+See the [Product Requirements Document](docs/PRD.md) for detailed feature roadmap and milestones.
